@@ -1,0 +1,18 @@
+<Panel Dock="Fill">
+<Router ux:Name="mainRouter"/>
+	<JavaScript File="../JS/router.js"/>
+
+	<Page HitTestMode="LocalVisualAndChildren">
+		<Navigator DefaultPath="splash">
+			<SplashView ux:Template="splash" MyRouter="mainRouter"/>
+			<LoginView ux:Template="login" MyRouter="mainRouter"/>
+			<SignupView ux:Template="signup" MyRouter="mainRouter"/>
+			<ChangePasswordView ux:Template="changePassword" MyRouter="mainRouter"/>
+			<HomeView ux:Template="home" MyRouter="mainRouter"/>
+			<TestView ux:Template="test" MyRouter="mainRouter"/>
+			<ResultView ux:Template="result" MyRouter="mainRouter"/>
+			<HistoryView ux:Template="history" MyRouter="mainRouter"/>
+			<EmailVerificationView ux:Template="emailVerification" MyRouter="mainRouter"/>
+		</Navigator>	  	
+	</Page>
+</Panel>

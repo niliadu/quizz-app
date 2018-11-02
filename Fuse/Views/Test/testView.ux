@@ -1,0 +1,140 @@
+<Panel >
+	<Page ux:Class="TestView">
+		<Router ux:Dependency="MyRouter"/>
+		<JavaScript>
+			var Observable = require("FuseJS/Observable");
+			var icons = require("JS/icons.js");			
+			var confirm = require("confirmPopup");
+			var myEmitter = require("myEmitter");
+			var routerCalls = require("routerCalls");
+
+			var currentQuestion = Observable(0);
+			var leftArrowDisabled = Observable(true);
+			var rightArrowDisabled = Observable(false);
+			var currentQuestionNumer = Observable(false);
+
+	        var questions = [
+	            {questionNumber: 1, questionId : 0, question : "Texto da questao 1", alternatives:[{alternativeId:0, text : "resposta 1"}, {alternativeId:1, text : "resposta 2"}, {alternativeId:2, text : "resposta 3"}, {alternativeId:3, text : "resposta 4"}], answerSelected: Observable(null) },
+	            {questionNumber: 2, questionId : 1, question : "Texto da questao 2", alternatives:[{alternativeId:0, text : "resposta 1"}, {id:1, text : "resposta 2"}, {alternativeId:2, text : "resposta 3"}, {id:3, text : "resposta 4"}], answerSelected: Observable(null) },
+	            {questionNumber: 3, questionId : 2, question : "Texto da questao 3", alternatives:[{alternativeId:0, text : "resposta 1"}, {alternativeId:1, text : "resposta 2"}, {alternativeId:2, text : "resposta 3"}, {alternativeId:3, text : "resposta 4"}], answerSelected: Observable(null) },
+	            {questionNumber: 4, questionId : 3, question : "Texto da questao 4", alternatives:[{alternativeId:0, text : "resposta 1"}, {alternativeId:1, text : "resposta 2"}, {alternativeId:2, text : "resposta 3"}, {alternativeId:3, text : "resposta 4"}], answerSelected: Observable(null) }, 
+	        ];
+
+	        function previous(){
+	        	if(currentQuestion.value > 0){
+	        		currentQuestion.value --;
+	        	}
+	        }
+
+	        function next(){
+	        	if(currentQuestion.value < (questions.length - 1)){
+	        		currentQuestion.value++;
+	        	}
+	        }
+
+	        function goToQuestion(e){
+	        	currentQuestion.value = e.data.questionNumber - 1;
+	        }
+
+	        currentQuestion.onValueChanged(module, function(val){
+	        	leftArrowDisabled.value =  val == 0 ? true : false;
+	        	rightArrowDisabled.value =  val == (questions.length - 1) ? true : false;
+
+	        	currentQuestionNumer.value = (val+1) < 10 ? ("0"+(val+1)) : val+1;
+	        });
+
+	        var totalQuestionsNumber = questions.length < 10 ? "0"+questions.length : questions.length;
+
+	        var menu = Observable({open:false});
+			function menuToggle(e){
+				var val = menu.value;
+				val.open = !val.open;
+				menu.value = val;
+			}
+
+			function endTest(e){
+				confirm.show({
+					title: "Deseja realmante finalizar a prova?",
+					description : "Questoes a responder: 2\r\nTempo restante: 2:30 min",
+					confirmText : "FINALIZAR",
+					confirmCall : "endTest",
+					confirmArgs : {},
+					cancelText : "CANCELAR",
+					cancelCall : "",
+					cancelArgs : {}
+				});
+			}
+
+			myEmitter.on("Call", function(args){
+				if(args[0] == "endTest"){
+					//finalizar a prova
+					routerCalls.send({
+						type : "go", 
+						to:"result", 
+						data : {}
+					});
+				}
+			});
+
+	        module.exports = {
+	            questions: questions,
+	            currentQuestion : currentQuestion,
+	            previous : previous,
+	            next : next,
+	            leftArrowDisabled : leftArrowDisabled,
+	            rightArrowDisabled : rightArrowDisabled,
+	            currentQuestionNumer : currentQuestionNumer,
+	            totalQuestionsNumber : totalQuestionsNumber,
+	            menuToggle : menuToggle,
+	            menu : menu,
+	            goToQuestion : goToQuestion,
+	            endTest : endTest
+	        };
+	    </JavaScript>
+		<DockPanel ux:Name="menuDock">
+			<My.AppBar Dock="Top" Visibility="Hidden"/>
+			<My.TestMenu Dock="Top" Alignment="Right" Open="{menu.open}" Toggle="{menuToggle}" Questions="{questions}"/>
+		</DockPanel>
+		<DockPanel>
+			<My.AppBar Title="Prova Matéria 1" Dock="Top" HasMenu="True" MenuHandler="{menuToggle}"/>
+			<DockPanel ux:Name="bottomBar" Dock="Bottom" Height="48" Color="PrimaryColor">
+				<My.IconButton Icon="{icons.keyboardArrowLeft}" Dock="Left" ButtonColor="White" BigIcon="True" Margin="8,8" Handler="{previous}" Disabled="{leftArrowDisabled}"/>
+				<My.IconButton Icon="{icons.keyboardArrowRight}" Dock="Right" ButtonColor="White" BigIcon="True" Margin="8,8" Handler="{next}" Disabled="{rightArrowDisabled}"/>
+				<StackPanel>
+					<DockPanel Alignment="Center">
+						<Icon Value="{icons.alarm}" TextColor="White" Dock="Left" Alignment="Center" FontSize="20"/>
+						<H3 Value="03:50" TextColor="White" Margin="5,1,5,0"/>
+					</DockPanel>
+					<DockPanel Alignment="Center">
+						<H2 Value="{currentQuestionNumer}" TextColor="White" Margin="0" Dock="Left"/>
+						<H4 Value="/" TextColor="White" Margin="1,0" Dock="Left" Alignment="Center"/>
+						<H4 Value="{totalQuestionsNumber}" TextColor="White" Margin="0" Alignment="CenterRight"/>
+					</DockPanel>
+				</StackPanel>
+            </DockPanel>
+			<PageControl ux:Name="questions" ActiveIndex="{currentQuestion}">
+	            <Each Items="{questions}">
+	            	<Page>
+	            		<DockPanel Dock="Top" Height="100%">
+		            		<My.CardThree Title="Questão {questionNumber}" CardColor="MaterialIndigoColor" IsLightColor="False"  Height="45%" Dock="Top">
+								<Panel ux:Template="Content">
+									<H4 TextColor="White" Margin="5,2" TextWrapping="Wrap" Value="{question}"/>
+								</Panel>
+							</My.CardThree>
+							<My.CardThree Title="Respostas" CardColor="White" IsLightColor="True"  Height="45%" Dock="Top">
+								<Panel ux:Template="Content" Alignment="TopLeft" Width="100%">
+									<DockPanel Width="100%">
+										<Selection MaxCount="1" MinCount="1" Value="{answerSelected}"/>
+										<Each Items="{alternatives}">
+											<My.RadioButton Value="{alternativeId}" Text="{text}" Dock="Top"/>
+										</Each>
+									</DockPanel>
+								</Panel>
+							</My.CardThree>
+						</DockPanel>
+	            	</Page>
+	            </Each>
+	        </PageControl>
+		</DockPanel>
+	</Page>
+</Panel>

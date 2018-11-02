@@ -1,0 +1,116 @@
+<Panel >
+	<Page ux:Class="HomeView">
+		<Router ux:Dependency="MyRouter"/>
+		<JavaScript>
+			var Observable = require("FuseJS/Observable");
+			var routerCalls = require("routerCalls");
+			var colors = require("JS/colors.js");
+			var confirm = require("confirmPopup");
+			var myEmitter = require("myEmitter");
+
+			var cData = Observable();
+			var line = [5,4,9,7,3,0,10,8,9,7];//notas
+			var line2 = [4,9,7,3,0,10,8,9,2,5];
+			cData.add({color:colors.chartBlue, data : line});
+			cData.add({color:colors.chartOrange, data : line2});
+
+
+			var itens = Observable();
+			itens.add({label:"item1", handler:null, disabled:false});
+			itens.add({label:"item2", handler:null, disabled:false});
+			itens.add({label:"item3", handler:null, disabled:false});
+			itens.add({label:"item4", handler:null, disabled:true});
+
+			
+
+			var mainMenu = Observable({open:false});
+			function mainMenuToggle(e){
+				var val = mainMenu.value;
+				val.open = !val.open;
+				mainMenu.value = val;
+			}
+
+			function confirmNewTeste(e){
+				var matterId = 0;
+				confirm.show({
+					title: "Gostaria de iniciar um teste sobre Materia 1?",
+					description : "Quantidade de questões: 20\r\nTempo máximo de prova: 20 min",
+					confirmText : "INICIAR",
+					confirmCall : "newTest",
+					confirmArgs : {matterId : matterId},
+					cancelText : "CANCELAR",
+					cancelCall : "",
+					cancelArgs : {}
+				});
+			}
+
+			myEmitter.on("Call",function(args){
+				if(args[0] == "newTest"){
+					routerCalls.send({
+						type : "go", 
+						to:"test", 
+						data : args[1]
+					});	
+				}
+			});
+
+			function pushToHistory(){
+				routerCalls.send({
+					type : "push", 
+					to:"history", 
+					data : {}
+				});	
+			}
+
+			module.exports = {
+					chartData : cData,
+					itens : itens,
+					mainMenu : mainMenu,
+					mainMenuToggle : mainMenuToggle,
+					confirmNewTeste : confirmNewTeste,
+					pushToHistory : pushToHistory
+				};
+		</JavaScript>
+		<DockPanel ux:Name="menuDock">
+			<My.AppBar Dock="Top" Visibility="Hidden"/>
+			<My.MainMenu Items="{itens}" Dock="Top" Alignment="Right" Open="{mainMenu.open}" Toggle="{mainMenuToggle}"/>
+		</DockPanel>
+		<DockPanel>
+			<My.AppBar Title="Home" Dock="Top" HasMenu="True" MenuHandler="{mainMenuToggle}"/>
+			<ScrollView>
+				<StackPanel>
+					<My.CardOne Title="Histórico" Subtitle="Descrição detalhada de sua performance ao longo do tempo." ContentKey="ContentCardOne" Handler="{pushToHistory}">
+						<My.LineChart ux:Template="ContentCardOne" ChartData="{chartData}"/>
+					</My.CardOne>
+					<My.CardTwo ux:Name="Materia1" Title="Materia 1" ContentKey="ContentCardTwo" CardColor="SuccessColor" IsLightColor="False" Handler="{confirmNewTeste}">
+						<Panel ux:Template="ContentCardTwo">
+							<StackPanel>
+								<H4 TextColor="White" Margin="5,2">Provas Realizadas : X</H4>
+								<H4 TextColor="White" Margin="5,2">Última Prova: Y</H4>
+								<H4 TextColor="White" Margin="5,2">Nota Média: Z</H4>
+							</StackPanel>
+						</Panel>
+					</My.CardTwo>
+					<My.CardTwo Title="Materia 2" ContentKey="ContentCardTwo" CardColor="WarningColor" IsLightColor="False">
+						<Panel ux:Template="ContentCardTwo">
+							<StackPanel>
+								<H4 TextColor="White" Margin="5,2">Provas Realizadas : X</H4>
+								<H4 TextColor="White" Margin="5,2">Última Prova: Y</H4>
+								<H4 TextColor="White" Margin="5,2">Nota Média: Z</H4>
+							</StackPanel>
+						</Panel>
+					</My.CardTwo>
+					<My.CardTwo Title="Simulado" ContentKey="ContentCardTwo" CardColor="ErrorColor" IsLightColor="False">
+						<Panel ux:Template="ContentCardTwo">
+							<StackPanel>
+								<H4 TextColor="White" Margin="5,2">Provas Realizadas : X</H4>
+								<H4 TextColor="White" Margin="5,2">Última Prova: Y</H4>
+								<H4 TextColor="White" Margin="5,2">Nota Média: Z</H4>
+							</StackPanel>
+						</Panel>
+					</My.CardTwo>
+				</StackPanel>
+			</ScrollView>
+		</DockPanel>
+	</Page>
+</Panel>

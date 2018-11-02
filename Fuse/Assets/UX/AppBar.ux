@@ -1,0 +1,28 @@
+<Panel>
+	<Panel ux:Class="My.AppBar" Color="PrimaryColor" Dock="Top" Height="48" Title="" HasBack="False" HasAction="False" HasMenu="False">
+		<string ux:Property="Title"/>
+		<bool ux:Property="HasBack"/>
+		<bool ux:Property="HasAction"/>
+		<object ux:Property="ActionHandler"/>
+		<bool ux:Property="HasMenu"/>
+		<object ux:Property="MenuHandler"/>
+
+		<DockPanel>
+			<My.IconButton ux:Name="back" Icon="{icons.arrowBack}" ButtonColor="White" Dock="Left" Handler="{UxGoBack}"/>
+			<My.IconButton ux:Name="menu" Icon="{icons.cMenu}" ButtonColor="White" Dock="Right" Handler="{Property MenuHandler}"/>
+			<My.IconButton ux:Name="action" Icon="{icons.check}" ButtonColor="White" Dock="Right" Handler="{Property ActionHandler}"/>
+			<H3 Color="White" Alignment="CenterLeft" Value="{Property Title}"/>
+		</DockPanel>
+		<DropShadow ux:Name="dropShadow" Distance="2" Spread="0.1"/>
+		
+		<WhileFalse Value="{Property HasBack}">
+			<Change back.Visibility="Hidden" Duration="0.1"/>
+		</WhileFalse>
+		<WhileFalse Value="{Property HasMenu}">
+			<Change menu.Visibility="Collapsed" Duration="0.1"/>
+		</WhileFalse>
+		<WhileFalse Value="{Property HasAction}">
+			<Change action.Visibility="Hidden" Duration="0.1"/>
+		</WhileFalse>
+	</Panel>
+</Panel>

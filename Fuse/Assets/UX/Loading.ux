@@ -1,0 +1,34 @@
+<Panel>
+	<Panel ux:Class="My.Loading">
+		<JavaScript>
+			var Observable = require("FuseJS/Observable");
+			var myEmitter = require("myEmitter");
+
+			var open = Observable(false);
+
+			myEmitter.on("Call", function(args){
+				if(args[0] == "showLoader"){
+					open.value = true;
+				}else if(args[0] == "hideLoader"){
+					open.value = false;
+				}
+			});
+
+			module.exports.open = open;
+		</JavaScript>
+		<Circle Color="White" Height="50" Width="50">
+			<Circle ux:Name="spin" Height="35" Width="45"  StartAngleDegrees="0" EndAngleDegrees="60">
+				<Stroke Width="3" Color="PrimaryColor"/>
+			</Circle>
+		</Circle>
+		<WhileTrue Value="{open}">
+			<Spin Target="spin" Frequency="1.2"/>
+			<Cycle Target="spin.EndAngleDegrees" Low="60" High="270" Frequency="0.5"/>
+		</WhileTrue>
+		<WhileFalse Value="{open}">
+			<Change this.Opacity="0" Duration="0.1"/>
+			<Change this.Visibility="Collapsed" Delay="0.1"/>
+		</WhileFalse>
+		<Rectangle  Color="AlmostBlackColor" Opacity="0.35" Height="100%" Width="100%"/>
+	</Panel>
+</Panel>

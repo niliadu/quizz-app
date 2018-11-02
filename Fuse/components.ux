@@ -1,0 +1,72 @@
+<Panel>
+	<Page ux:Class="ComponentsPage" />
+
+	<!-- Colors -->
+	<SolidColor ux:Global="PrimarySolidColor" Color="PrimaryColor" />
+	<float4 ux:Global="PrimaryColor" ux:Value="#66BB6A"/>
+	<float4 ux:Global="NeutralColor" ux:Value="#9E9E9E"/>
+	<float4 ux:Global="ErrorColor" ux:Value="#F44336"/>
+	<float4 ux:Global="WarningColor" ux:Value="#FF9800"/>
+	<float4 ux:Global="SuccessColor" ux:Value="#4CAF50"/>
+	<float4 ux:Global="DisabledColor" ux:Value="#E0E0E0"/>
+	<float4 ux:Global="PressedColor" ux:Value="#C7C7C7"/>
+	<float4 ux:Global="AlmostBlackColor" ux:Value="#4F4F4F"/>
+	<!-- Material 400 -->
+	<float4 ux:Global="MaterialRedColor" ux:Value="#EF5350"/>
+	<float4 ux:Global="MaterialOrangeColor" ux:Value="#FFA726"/>
+	<float4 ux:Global="MaterialYellowColor" ux:Value="#FFEE58"/>
+	<float4 ux:Global="MaterialGreenColor" ux:Value="#8BC34A"/>
+	<float4 ux:Global="MaterialBlueColor" ux:Value="#42A5F5"/>
+	<float4 ux:Global="MaterialIndigoColor" ux:Value="#5C6BC0"/>
+	<float4 ux:Global="MaterialPurpleColor" ux:Value="#AB47BC"/>
+
+	<!-- Images  -->
+	<FileImageSource ux:Global="Img.appLogo" File="Assets/Images/logo.png"/>
+	<FileImageSource ux:Global="Img.appLogoStrip" File="Assets/Images/logo_strip.png"/>
+
+
+	<!-- Fonts -->
+	<Font File="Assets/Fonts/Roboto-Black.ttf" ux:Global="FontBlack" />
+	<Font File="Assets/Fonts/Roboto-BlackItalic.ttf" ux:Global="FontBlackItalic" />
+	<Font File="Assets/Fonts/Roboto-Bold.ttf" ux:Global="FontBold" />
+	<Font File="Assets/Fonts/Roboto-BoldItalic.ttf" ux:Global="FontBoldItalic" />
+	<Font File="Assets/Fonts/Roboto-Italic.ttf" ux:Global="FontItalic" />
+	<Font File="Assets/Fonts/Roboto-Light.ttf" ux:Global="FontLight" />
+	<Font File="Assets/Fonts/Roboto-LightItalic.ttf" ux:Global="FontLightItalic" />
+	<Font File="Assets/Fonts/Roboto-Medium.ttf" ux:Global="FontMedium" />
+	<Font File="Assets/Fonts/Roboto-MediumItalic.ttf" ux:Global="FontMediumItalic" />
+	<Font File="Assets/Fonts/Roboto-Regular.ttf" ux:Global="FontRegular" />
+	<Font File="Assets/Fonts/Roboto-Thin.ttf" ux:Global="FontThin" />
+	<Font File="Assets/Fonts/Roboto-ThinItalic.ttf" ux:Global="FontThinItalic" />
+	<Font File="Assets/Fonts/MaterialIcons-Regular.ttf" ux:Global="MaterialIcons" />
+
+	<!-- Headers -->
+	<Text ux:Class="H1" Font="FontBlack" FontSize="36" Margin="5"/>
+	<Text ux:Class="H2" Font="FontBlack" FontSize="24" Margin="5"/>
+	<Text ux:Class="H3" Font="FontBlack" FontSize="18" Margin="5"/>
+	<Text ux:Class="H4" Font="FontMedium" FontSize="14" Margin="5"/>
+	<Text ux:Class="H5" Font="FontMedium" FontSize="12" Margin="5"/>
+
+	<Text ux:Class="Icon" Font="MaterialIcons" FontSize="24"/>
+
+	<ux:Include File="Assets/UX/TextInput.ux"/>
+	<ux:Include File="Assets/UX/Button.ux"/>
+	<ux:Include File="Assets/UX/FlatButton.ux"/>
+	<ux:Include File="Assets/UX/IconButton.ux"/>
+	<ux:Include File="Assets/UX/AppBar.ux"/>
+	<ux:Include File="Assets/UX/CardOne.ux"/>
+	<ux:Include File="Assets/UX/LineChart.ux"/>
+	<ux:Include File="Assets/UX/CardTwo.ux"/>
+	<ux:Include File="Assets/UX/MainMenu.ux"/>
+	<ux:Include File="Assets/UX/Confirm.ux"/>
+	<ux:Include File="Assets/UX/CardThree.ux"/>
+	<ux:Include File="Assets/UX/RadioButton.ux"/>
+	<ux:Include File="Assets/UX/TestMenu.ux"/>
+	<ux:Include File="Assets/UX/CardFour.ux"/>
+	<ux:Include File="Assets/UX/ListItem.ux"/>
+	<ux:Include File="Assets/UX/ResultCard.ux"/>
+	<ux:Include File="Assets/UX/ListItemHistory.ux"/>
+	<ux:Include File="Assets/UX/HistoryTestsList.ux"/>
+	<ux:Include File="Assets/UX/Loading.ux"/>
+	<ux:Include File="Assets/UX/Toast.ux"/>
+</Panel>

@@ -1,0 +1,61 @@
+<Panel>
+	<Panel ux:Class="My.HistoryTestsList">
+		<object ux:Property="Data"/>
+		<object ux:Property="Close"/>
+		<object ux:Property="ListButton"/>
+
+		<JavaScript>
+			var Observable = require("FuseJS/Observable");
+
+			var data = Observable();
+
+			var od = this.Data.inner();
+			var oData = od.map(function(item){
+				return item;
+			});
+			oData.onValueChanged(module,function(val){
+				val != null ? data.value = oData.value : null;
+			});
+			module.exports.data = data;
+		</JavaScript>
+		<Panel ux:Name="mainPanel" Height="80%" Color="White" Alignment="Bottom">
+			<DockPanel>
+				<Panel ux:Name="title" Dock="Top" Color="MaterialBlueColor" Height="40"  Padding="16,0">
+					<H3 Value="{data.matter}" Color="White" Alignment="Center"/>
+					<DropShadow Color="AlmostBlackColor" Distance="2" Spread="0.1"/>
+					<Clicked Handler="{Property Close}"/>
+				</Panel>
+				<ScrollView>
+					<StackPanel>
+						<Each Items="{data.tests}">
+							<DockPanel>
+								<Rectangle ux:Name="cliqueRec" Height="100%" Width="100%" Color="AlmostBlackColor" Opacity="0"/>
+								<Rectangle ux:Name="cliqueRad" Height="100%" Width="0%" Color="AlmostBlackColor" CornerRadius="50" Opacity="0.15"/>
+								<DockPanel Padding="16,10,16,0">
+									<Rectangle Width="75%" Height="1" Color="AlmostBlackColor" Opacity="0.15" Dock="Bottom"/>
+									<Icon Value="{icons.assignment}" Color="AlmostBlackColor" Dock="Right" Margin="10,0,5,0"/>
+									<H5 ux:Name="date" Color="ErrorColor" Value="{date}" Dock="Left"/>
+									<H5 ux:Name="score" Color="ErrorColor" Value="{score}" Dock="Right"/>
+									<WhileTrue Value="{approved}">
+										<Change date.Color="SuccessColor"/>
+										<Change score.Color="SuccessColor"/>
+									</WhileTrue>
+								</DockPanel>
+								<Clicked Handler="{Property ListButton}">
+									<Change cliqueRad.Width="100%" Duration="0.2" DurationBack="0"/>
+									<Change cliqueRec.Opacity="0.1" Duration="0.2"/>
+								</Clicked>
+							</DockPanel>
+						</Each>
+					</StackPanel>
+				</ScrollView>
+			</DockPanel>
+		</Panel>
+		<Panel  Color="Black" Opacity="0.2"/>
+		<WhileFalse Value="{data.open}">
+			<Change this.Visibility="Hidden" Delay="0.3"/>
+			<Change this.Opacity="0" Duration="0.25"/>
+			<Move Target="mainPanel" RelativeTo="Size" Y="1" Duration="0.25"/>
+		</WhileFalse>
+	</Panel>
+</Panel>

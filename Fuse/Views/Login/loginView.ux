@@ -1,0 +1,27 @@
+<Panel >
+	<Page ux:Class="LoginView">
+		<Router ux:Dependency="MyRouter"/>
+		<JavaScript File="login.js"/>
+
+		<StackPanel>
+			<Rectangle Height="30"/>
+			<H1 TextColor="PrimaryColor" Alignment="Center">SIMULADOS</H1>
+			<Panel Margin="0,50" Width="150">
+				<Image Source="Img.appLogoStrip"/>
+			</Panel>
+			<H3 TextColor="PrimaryColor" Alignment="Center" Font="FontMediumItalic">PROVA DE ALGUMA COISA</H3>
+			<Rectangle Height="15"/>
+			<My.TextInput Label="Email" Icon="{icons.email}" TextValue="{email}" Error="{emailError}" ErrorMessage="{emailErrorMessage}" InputHint="Email" ActionStyle="Next"/>
+			<My.TextInput Label="Senha" Icon="{icons.lock}"  TextValue="{password}" Error="{passwordError}" ErrorMessage="{passwordErrorMessage}" IsPassword="True" ActionStyle="Done" ActionStyleHandler="{checkLogin}" HasActionStyleHandler="True"/>
+
+
+			<My.Button Width="70%" Text="LOGIN" Handler="{checkLogin}"/>
+			<Rectangle Height="15"/>
+			<My.Button ux:Name="signup" Handler="{UxPush}" Width="70%" Text="CADASTRAR"/>
+			<StackPanel Orientation="Horizontal">
+				<Text Font="FontRegular" Color="NeutralColor" Margin="15" Value="Esqueceu sua senha?" TextAlignment="Center"/>
+				<My.FlatButton ux:Name="changePassword" Text="CLIQUE AQUI" Handler="{UxPush}" />
+			</StackPanel>
+		</StackPanel>
+	</Page>
+</Panel>

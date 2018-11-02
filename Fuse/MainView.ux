@@ -1,0 +1,25 @@
+<App ux:Name="App" Background="#FFFFFF">
+	
+	<JavaScript File="JS/icons.js"/>
+	<JavaScript File="JS/userState.js"/>
+
+	<ux:Include File="components.ux" />
+	<ux:Include File="pagesRefferences.ux" />
+
+	
+		<My.Loading/>
+		<My.Confirmation/>
+	<DockPanel>	
+		<BottomBarBackground Dock="Bottom" Background="PrimarySolidColor"/>
+		<My.Toast/>
+	</DockPanel>
+	<DockPanel>
+		<!-- StatusBar Settings -->
+		<iOS.StatusBarConfig Style="Light" Animation="Slide" IsVisible="True" />
+		<Android.StatusBarConfig Color="PrimaryColor" IsVisible="True" />
+		<StatusBarBackground Dock="Top" Background="PrimarySolidColor"/>
+		<BottomBarBackground Dock="Bottom" Background="PrimarySolidColor"/>
+
+		<ux:Include File="Views/rootView.ux"/>
+	</DockPanel>
+</App>

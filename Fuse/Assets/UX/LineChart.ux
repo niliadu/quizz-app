@@ -1,0 +1,127 @@
+<Panel>
+	<Panel ux:Class="My.LineChart" Padding="10,0,20,0">
+		<object ux:Property="ChartData"/>
+		
+		<Each Items="{Property ChartData}">
+			<LineView LineData="{data}" LineColor="{color}"/>
+		</Each>
+		<Grid ux:Name="backGrid" RowCount="12" ColumnCount="10" Color="White" CellSpacing="0">
+			<Rectangle Height="100%" Width="100%" Row="0" Column="0" ColumnSpan="10">
+				<DockPanel>
+					<Text Color="NeutralColor" Font="FontLight" FontSize="10" Alignment="BottomLeft" TextAlignment="Center" Dock="Left" Value="10"/>
+					<Rectangle Color="NeutralColor" Opacity="0.3" Height="1" Width="95%" Dock="Bottom" Alignment="BottomRight"/>
+				</DockPanel>
+			</Rectangle>
+			<Rectangle Height="100%" Width="100%" Row="1" Column="0" ColumnSpan="10"/>
+			<Rectangle Height="100%" Width="100%" Row="2" Column="0" ColumnSpan="10">
+				<DockPanel>
+					<Text Color="NeutralColor" Font="FontLight" FontSize="10" Alignment="BottomLeft" Margin="3,3,0,0" Value="8"/>
+					<Rectangle Color="NeutralColor" Opacity="0.5" Height="1" Width="95%" Dock="Bottom" Alignment="BottomRight"/>
+				</DockPanel>
+			</Rectangle>
+			<Rectangle Height="100%" Width="100%" Row="3" Column="0" ColumnSpan="10"/>
+			<Rectangle Height="100%" Width="100%" Row="4" Column="0" ColumnSpan="10">
+				<DockPanel>
+					<Text Color="NeutralColor" Font="FontLight" FontSize="10" Alignment="BottomLeft" Margin="3,3,0,0" Value="6"/>
+					<Rectangle Color="NeutralColor" Opacity="0.5" Height="1" Width="95%" Dock="Bottom" Alignment="BottomRight"/>
+				</DockPanel>
+			</Rectangle>
+			<Rectangle Height="100%" Width="100%" Row="5" Column="0" ColumnSpan="10"/>
+			<Rectangle Height="100%" Width="100%" Row="6" Column="0" ColumnSpan="10">
+				<DockPanel>
+					<Text Color="NeutralColor" Font="FontLight" FontSize="10" Alignment="BottomLeft" Margin="3,3,0,0" Value="4"/>
+					<Rectangle Color="NeutralColor" Opacity="0.5" Height="1" Width="95%" Dock="Bottom" Alignment="BottomRight"/>
+				</DockPanel>
+			</Rectangle>
+			<Rectangle Height="100%" Width="100%" Row="7" Column="0" ColumnSpan="10"/>
+			<Rectangle Height="100%" Width="100%" Row="8" Column="0" ColumnSpan="10">
+				<DockPanel>
+					<Text Color="NeutralColor" Font="FontLight" FontSize="10" Alignment="BottomLeft" Margin="3,3,0,0" Value="2"/>
+					<Rectangle Color="NeutralColor" Opacity="0.5" Height="1" Width="95%" Dock="Bottom" Alignment="BottomRight"/>
+				</DockPanel>
+			</Rectangle>
+			<Rectangle Height="100%" Width="100%" Row="9" Column="0" ColumnSpan="10"/>
+			<Rectangle Height="100%" Width="100%" Row="10" Column="0" ColumnSpan="10">
+				<DockPanel>
+					<Text Color="NeutralColor" Font="FontLight" FontSize="10" Alignment="BottomLeft" Margin="3,3,0,0" Value="0"/>
+					<Rectangle Color="NeutralColor" Opacity="0.5" Height="1" Width="95%" Dock="Bottom" Alignment="BottomRight"/>
+				</DockPanel>
+			</Rectangle>
+			<Rectangle Height="100%" Width="100%" Row="11" Column="0" ColumnSpan="10">
+				<Text Color="NeutralColor" Font="FontLight" FontSize="10" Alignment="Bottom" TextAlignment="Center" Margin="3,3,0,0" Value="Últimas 10 Avaliações"/>
+			</Rectangle>
+		</Grid>
+
+		<!-- Line Template -->
+		<Panel ux:Class="LineView">
+			<object ux:Property="LineData"/>
+			<string ux:Property="LineColor"/>
+
+			<JavaScript>
+				var Observable = require("FuseJS/Observable");
+
+				var canLoadPoints = Observable(false);
+				var pointsMaxIndex = 0;
+				var points = Observable();
+				
+				var ld = this.LineData.inner();
+				var lData = ld.map(function(obj){
+					return obj;
+				});
+				lData.onValueChanged(module, function(val){
+					pointsMaxIndex = lData.length -1;
+					lData.forEach(function(item, index){
+						points.add({row : (10 - item), col: index});
+					});
+				});
+				var count = Observable(0);
+				function pointPlaced(e){
+					if(count.value <= pointsMaxIndex){
+						var index = e.data.col;
+						var p = points.getAt(index);
+						p.x = e.x;
+						p.y = e.y;
+						points.replaceAt(index, p);
+						count.value++;
+					}
+				}
+
+				count.onValueChanged(module,function(val){
+					if(val == pointsMaxIndex+1){
+						points.forEach(function(point, index){
+							if(index < pointsMaxIndex){
+								var p1 = point;
+								var p2 = points.getAt(index+1);
+
+								point.lineAngle = (Math.atan2(p2.y - p1.y, p2.x - p1.x) * 180 / Math.PI) + 180;
+								point.lineWidth = Math.sqrt(Math.pow((p2.y - p1.y),2) + Math.pow((p2.x - p1.x),2));
+								points.replaceAt(index,point);
+							}else{
+								point.lineAngle = 0;
+								point.lineWidth = 0;
+								points.replaceAt(index,point);
+							}
+						});
+					}
+				});
+
+				module.exports = {
+					points : points,
+					pointPlaced : pointPlaced,
+				}
+			</JavaScript>
+			<Grid ux:Name="pointGrid" RowCount="12" ColumnCount="10" CellSpacing="0">
+				<Each Items="{points}">
+					<Circle Row="{row}" Column="{col}" Alignment="BottomRight" Width="5" Height="5" Color="{Property LineColor}" Anchor="50%,60%" Placed="{pointPlaced}"/>
+				</Each>
+			</Grid>
+			<Grid ux:Name="lineGrid" RowCount="12" ColumnCount="10" CellSpacing="0">
+				<Each Items="{points}">
+					<Rectangle Color="{Property LineColor}" Width="{lineWidth}" Height="2" Row="{row}" Column="{col}" Alignment="BottomRight" Anchor="100%,50%" TransformOrigin="Anchor">
+						<Rotation Degrees="{lineAngle}"/>
+					</Rectangle>
+				</Each>
+			</Grid>
+		</Panel>
+	</Panel>
+</Panel>

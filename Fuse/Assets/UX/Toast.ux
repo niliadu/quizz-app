@@ -1,0 +1,51 @@
+<Panel>
+	<DockPanel ux:Class="My.Toast" Color="AlmostBlackColor" Dock="Bottom" Height="60">
+		<JavaScript>
+			var Observable = require("FuseJS/Observable");
+			var toast = require("toast");
+			var colors = require("JS/colors.js");
+
+			var text = Observable();
+			var textColor = Observable();
+			var show = Observable();
+			var timer = null;
+
+			var timeoutClear = null;
+			var timeoutHide = null;
+
+			function hide(){
+				show.value = false;
+				timeoutClear = setTimeout(function(){
+					text.value = "Houve um problema!\r\nPor favor, tente novamente.";
+					textColor.value = colors.warning;
+					timer = 3000;
+				},250);
+			}
+
+			toast.on("show",function(args){
+				timeoutClear != null ? clearTimeout(timeoutClear) : null;
+				timeoutHide != null ? clearTimeout(timeoutHide) : null;
+
+				args.length > 0 ? text.value = args[0] : null;
+				args.length > 1 ? textColor.value = args[1] : null;
+				args.length > 2 ? timer = args[2] : null;
+				show.value = true;
+				timeoutHide = setTimeout(hide,timer);
+			});
+
+			hide();
+
+			module.exports ={
+				text : text,
+				textColor : textColor,
+				show : show
+			};
+		</JavaScript>
+		<Rectangle Color="{textColor}" Height="2" Dock="Top" Margin="0,2,0,0"/>
+		<Rectangle Color="{textColor}" Height="2" Dock="Top" Margin="0,2,0,0"/>
+		<H5  Font="FontBlack" Value="{text}" Color="{textColor}" TextWrapping="Wrap" TextAlignment="Center" Alignment="Center" Margin="2"/>
+		<WhileFalse Value="{show}">
+			<Move Target="this" RelativeTo="Size" Y="1" Duration="0.25"/>
+		</WhileFalse>
+	</DockPanel>
+</Panel>

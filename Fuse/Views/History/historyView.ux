@@ -1,0 +1,76 @@
+<Panel >
+	<Page ux:Class="HistoryView">
+		<Router ux:Dependency="MyRouter"/>
+		<JavaScript>
+			var Observable = require("FuseJS/Observable");
+			var routerCalls = require("routerCalls");
+
+			var matters = Observable();
+
+			matters.add({data:{matter:"Matéria 1", status:"success", answeredQuestions : 150, testsDone: 12, aprovals: 10, averageScore : 8, lastTestScore: 6}});
+			matters.add({data:{matter:"Matéria 2", status:"warning", answeredQuestions : 150, testsDone: 12, aprovals: 10, averageScore : 8, lastTestScore: 6}});
+			matters.add({data:{matter:"Simulado", status:"danger", answeredQuestions : 150, testsDone: 12, aprovals: 10, averageScore : 8, lastTestScore: 6}});
+
+			function openList(e){
+				var v = testsData.value;
+				v.open = true;
+				testsData.value = v;
+			}
+
+			function closeList(e){
+				var v = testsData.value;
+				v.open = false;
+				testsData.value = v;
+			}
+
+			var testsData = Observable({
+				open: false,
+				matter : "Materia Tal",
+				tests: [
+					{date: "01/01/0001", score: "8.0", approved : false},
+					{date: "01/01/0001", score: "8.5", approved : true},
+					{date: "01/01/0001", score: "8.0", approved : false},
+					{date: "01/01/0001", score: "8.5", approved : true},
+					{date: "01/01/0001", score: "8.0", approved : false},
+					{date: "01/01/0001", score: "8.5", approved : true},
+					{date: "01/01/0001", score: "8.0", approved : false},
+					{date: "01/01/0001", score: "8.5", approved : true},
+					{date: "01/01/0001", score: "8.0", approved : false},
+					{date: "01/01/0001", score: "8.5", approved : true},
+					{date: "01/01/0001", score: "8.0", approved : false},
+					{date: "01/01/0001", score: "8.5", approved : true},
+					{date: "01/01/0001", score: "8.0", approved : false},
+					{date: "01/01/0001", score: "8.5", approved : true}
+				]
+			});
+
+			function pushToResult(e){
+				routerCalls.send({
+					type : "push", 
+					to:"result", 
+					data : {}
+				});
+			}
+
+	        module.exports.matters = matters;
+	        module.exports.openList = openList;
+	        module.exports.closeList = closeList;
+	        module.exports.testsData = testsData;
+	        module.exports.pushToResult = pushToResult;
+	    </JavaScript>
+	    <DockPanel>
+	    	<My.AppBar Dock="Top" Visibility="Hidden"/>
+	    	<My.HistoryTestsList Data="{testsData}" Dock="Bottom" Close="{closeList}" Height="100%" ListButton="{pushToResult}"/>
+	    </DockPanel>
+		<DockPanel>
+			<My.AppBar Title="Histórico" Dock="Top" HasBack="True"/>
+			<ScrollView>
+				<StackPanel>
+					<Each Items="{matters}">
+						<My.ListItemHistory Data="{data}" OpenList="{openList}"/>
+					</Each>
+				</StackPanel>
+			</ScrollView>
+		</DockPanel>
+	</Page>
+</Panel>

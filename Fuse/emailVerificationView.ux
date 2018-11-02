@@ -1,0 +1,19 @@
+<Panel >
+	<Page ux:Class="EmailVerificationView">
+		<Router ux:Dependency="MyRouter"/>
+		<JavaScript File="emailVerification.js"/>
+		<DockPanel>
+			<My.AppBar Title="Verificação por Email" Dock="Top"/>
+			<StackPanel Alignment="Center">
+				<H3 Value="Por favor, para começar a usar o aplicativo confirme seu cadastro através do email que foi enviado para {email}." Alignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="16"/>
+				<My.Button Width="200" Text="JÁ CONFIRMEI!" Dock="Bottom" Margin="30,50" Handler="{checkEmailVerified}"/>
+				<My.Button Width="200" Text="REENVIAR EMAIL" Dock="Bottom" Margin="30,20" Handler="{resendEmail}"/>
+				
+			</StackPanel>
+			<DockPanel Dock="Bottom">
+				<H4 Value="Retornar à página de" Alignment="Center" TextWrapping="Wrap" TextAlignment="Center" Margin="40,16,0,16" Dock="Left"/>
+				<My.FlatButton Text="Login" Dock="Left" Handler="{returnToLogin}"/>
+			</DockPanel>
+		</DockPanel>
+	</Page>
+</Panel>

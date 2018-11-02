@@ -1,0 +1,16 @@
+<Panel >
+	<Page ux:Class="SplashView">
+		<Router ux:Dependency="MyRouter"/>
+		
+		<Panel Margin="30">
+			<Image Source="Img.appLogo" ux:Name="SplashLogo" Opacity="0.3">
+				<JavaScript File="splash.js"/>
+				<WhileTrue Value="True">
+					<Cycle Target="SplashLogo.Opacity" Low="0.3" High="1" Frequency="0.5" Waveform="Triangle"/>
+				</WhileTrue>
+			</Image>
+			
+			
+		</Panel>
+	</Page>
+</Panel>

@@ -1,0 +1,85 @@
+<Panel>
+	<Panel ux:Class="My.ResultCard">
+		<object ux:Property="QuestionData"/>
+		<object ux:Property="Close"/>
+		<JavaScript>
+			var Observable = require("FuseJS/Observable");
+
+			var data = Observable();
+
+			var qd = this.QuestionData.inner();
+			var qData = qd.map(function(item){
+				return item;
+			});
+			qData.onValueChanged(module,function(val){
+				val != null ? data.value = qData.value : null;
+			});
+			module.exports.data = data;
+		</JavaScript>
+		<Panel ux:Name="mainPanel" Height="65%" Color="White" Alignment="Bottom">
+			<DockPanel>
+				<Panel ux:Name="title" Dock="Top" Color="ErrorColor" Height="40"  Padding="16,0">
+					<H3 Value="Questão {data.questionNumeber}" Color="White" Alignment="Center"/>
+					<DropShadow Color="AlmostBlackColor" Distance="2" Spread="0.1"/>
+					<Clicked Handler="{Property Close}"/>
+				</Panel>
+				<DockPanel ux:Name="question" Dock="Top" Height="30%" Padding="16,5,16,0">
+					<Rectangle Color="AlmostBlackColor" Opacity="0.2" Height="1" Width="70%" Alignment="Center" Dock="Bottom" Margin="0,5,0,0"/>
+					<DockPanel>
+						<Rectangle Height="15" Dock="Bottom">
+							<LinearGradient AngleDegrees="90">
+    							<GradientStop Offset="0" Color="#00000000" />
+    							<GradientStop Offset="0.7" Color="White" />
+							</LinearGradient>
+						</Rectangle>
+					</DockPanel>
+					<ScrollView>
+						<H5 Value="{data.question}" TextWrapping="Wrap"/>
+					</ScrollView>
+				</DockPanel>
+				<DockPanel ux:Name="chosen" Dock="Top" Height="30%" Padding="10,5">
+					<Rectangle Color="AlmostBlackColor" Opacity="0.2" Height="1" Width="70%" Alignment="Center" Dock="Bottom" Margin="0,5,0,0"/>
+					<H4 Value="Escolhida" Color="ErrorColor" Dock="Top"/>
+					<DockPanel>
+						<Rectangle Height="15" Dock="Bottom">
+							<LinearGradient AngleDegrees="90">
+    							<GradientStop Offset="0" Color="#00000000" />
+    							<GradientStop Offset="0.7" Color="White" />
+							</LinearGradient>
+						</Rectangle>
+					</DockPanel>
+					<ScrollView  Margin="6,0">
+						<H5 Value="{data.chosen}" TextWrapping="Wrap"/>
+					</ScrollView>
+				</DockPanel>
+				<DockPanel ux:Name="correct" Dock="Top" Height="30%" Padding="10,5">
+					<H4 Value="Correta" Color="SuccessColor" Dock="Top"/>
+					<DockPanel>
+						<Rectangle Height="15" Dock="Bottom">
+							<LinearGradient AngleDegrees="90">
+    							<GradientStop Offset="0" Color="#00000000" />
+    							<GradientStop Offset="0.7" Color="White" />
+							</LinearGradient>
+						</Rectangle>
+					</DockPanel>
+					<ScrollView Margin="6,0">
+						<H5 Value="{data.correctAnswer}" TextWrapping="Wrap"/>
+					</ScrollView>
+				</DockPanel>
+			</DockPanel>
+		</Panel>
+		<Panel  Color="Black" Opacity="0.2"/>
+
+		<WhileTrue Value="{data.correct}">
+			<Change title.Color="SuccessColor"/>
+			<Change chosen.Visibility="Collapsed"/>
+			<Change question.Height="45%"/>
+			<Change correct.Height="45%"/>
+		</WhileTrue>
+		<WhileFalse Value="{data.open}">
+			<Change this.Visibility="Hidden" Delay="0.3"/>
+			<Change this.Opacity="0" Duration="0.25"/>
+			<Move Target="mainPanel" RelativeTo="Size" Y="1" Duration="0.25"/>
+		</WhileFalse>
+	</Panel>
+</Panel>

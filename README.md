@@ -1,2 +1,4 @@
-# quizz-app
-Mobile app for test your knowleged. Made with Fusetools and Firebase
+# quizz_app
+
+A Quizz App using Flutter and Firebase.
+

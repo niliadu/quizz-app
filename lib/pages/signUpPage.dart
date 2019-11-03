@@ -1,43 +1,46 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'resetPasswordPage.dart';
-import 'signUpPage.dart';
 import 'verifyEmailPage.dart';
 
-class LoginPage extends StatefulWidget {
+class SignUp extends StatefulWidget {
   @override
-  _LoginPageState createState() => new _LoginPageState();
+  _SignUpState createState() => new _SignUpState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  String _email, _password;
-  bool _showErrorMessage = false;
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+class _SignUpState extends State<SignUp> {
+  String _name, _email, _password;
+  bool _showEmailUsedError = false;
+  final _formKey = GlobalKey<FormState>();
 
-  void signIn() async {
-    setState(() {
-      _showErrorMessage = false;
-    });
-
+  void signup() {
     final formState = _formKey.currentState;
+    setState(() {
+      _showEmailUsedError = false;
+    });
     if (formState.validate()) {
       formState.save();
-
+      FirebaseUser user;
       FirebaseAuth.instance
-          .signInWithEmailAndPassword(email: _email, password: _password)
+          .createUserWithEmailAndPassword(email: _email, password: _password)
           .then((result) {
+        user = result.user;
+        final newUser = new UserUpdateInfo();
+        newUser.displayName = _name;
+        return user.updateProfile(newUser);
+      }).then((result) {
+        return user.sendEmailVerification();;
+      }).then((result) {
         Navigator.of(context).pop();
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(
-              builder: (context) => VerifyEmail(user: result.user)),
+          MaterialPageRoute(builder: (context) => VerifyEmail(user: user)),
         );
       }).catchError((e) {
-        if (e.code == "ERROR_USER_NOT_FOUND" ||
-            e.code == "ERROR_WRONG_PASSWORD") {
+        print(e);
+        if (e.code == "ERROR_EMAIL_ALREADY_IN_USE") {
           setState(() {
-            _showErrorMessage = true;
+            _showEmailUsedError = true;
           });
         }
       });
@@ -47,6 +50,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(title: Text("Criar Conta")),
       body: Form(
         key: _formKey,
         child: SafeArea(
@@ -54,6 +58,20 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
+                  TextFormField(
+                    decoration: InputDecoration(labelText: "Nome"),
+                    validator: (value) {
+                      if (value.isEmpty) {
+                        return "Nome não pode ficar em branco";
+                      }
+
+                      if (value.length < 3)
+                        return 'Seu nome precisa de pelo menos 3 caracteres';
+                      else
+                        return null;
+                    },
+                    onSaved: (value) => _name = value,
+                  ),
                   TextFormField(
                     decoration: InputDecoration(labelText: "Email"),
                     keyboardType: TextInputType.emailAddress,
@@ -70,9 +88,11 @@ class _LoginPageState extends State<LoginPage> {
                         return null;
                     },
                     onSaved: (value) => _email = value,
-                    onChanged: (value) => setState(() {
-                      _showErrorMessage = false;
-                    }),
+                    onChanged: (value) {
+                      setState(() {
+                        _showEmailUsedError = false;
+                      });
+                    },
                   ),
                   TextFormField(
                     decoration: InputDecoration(labelText: "Senha"),
@@ -85,42 +105,15 @@ class _LoginPageState extends State<LoginPage> {
                     },
                     onSaved: (value) => _password = value,
                     obscureText: true,
-                    onChanged: (value) => setState(() {
-                      _showErrorMessage = false;
-                    }),
                   ),
                   Visibility(
-                    visible: _showErrorMessage,
-                    child: Text("Usuário ou Senha incorretos"),
+                    visible: _showEmailUsedError,
+                    child: Text("Este Email já foi cadastrado."),
                   ),
                   RaisedButton(
-                    child: Text("ENTRAR"),
-                    onPressed: signIn,
+                    child: Text("Salvar"),
+                    onPressed: signup,
                   ),
-                  RaisedButton(
-                    child: Text("Criar Conta"),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => SignUp(),
-                          fullscreenDialog: true,
-                        ),
-                      );
-                    },
-                  ),
-                  RaisedButton(
-                    child: Text("Esqueci minha Senha"),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ResetPassword(),
-                          fullscreenDialog: true,
-                        ),
-                      );
-                    },
-                  )
                 ]),
           ),
         ),

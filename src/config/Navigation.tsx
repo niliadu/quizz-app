@@ -5,6 +5,7 @@ import {createStackNavigator, StackNavigationProp} from '@react-navigation/stack
 export type RoutesParams ={
     LOGIN:undefined;
     SIGN_UP:undefined;
+    SPLASH_SCREEN:undefined;
 }
 
 export const RootStack = createStackNavigator<RoutesParams>();

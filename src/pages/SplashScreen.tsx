@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {View, Image, StyleSheet, Dimensions} from 'react-native';
+import {View, StyleSheet, Dimensions} from 'react-native';
 import {RouteProp} from 'src/config/Navigation';
 import Theme from '../assets/Theme';
 import auth from '@react-native-firebase/auth';
@@ -9,28 +9,38 @@ export default function SplashScreen(props: RouteProp<'SPLASH_SCREEN'>) {
   const [checkingUser, setCheckingUser] = React.useState(true);
   const [authenticated, setAuthenticated] = React.useState(false);
 
+  React.useEffect(() => {
+    const subs = auth().onAuthStateChanged(user => {
+      props.navigation.reset({
+        index: 0,
+        routes:[{name: !!user ? "HOME" : "LOGIN"}]
+      });
+    });
+    return subs;
+  }, []);
 
-  const animation = React.useRef(new Animated.Value(1)).current
+  const opacity = React.useRef(new Animated.Value(1)).current;
   Animated.loop(
     Animated.sequence([
-      Animated.timing(animation, {
+      Animated.timing(opacity, {
         toValue: 0.1,
         duration: 2000,
-        useNativeDriver: true
+        useNativeDriver: true,
       }),
-      Animated.timing(animation, {
+      Animated.timing(opacity, {
         toValue: 1,
         duration: 2000,
-        useNativeDriver:true
-      })
-    ])
-  ).start()
+        useNativeDriver: true,
+      }),
+    ]),
+  ).start();
 
-    return (<View style={styles.view}>
-      <Animated.Image        
-          style={{...styles.logo, opacity:animation}}
-          source={require('../assets/Images/logo.png')}
-          />
+  return (
+    <View style={styles.view}>
+      <Animated.Image
+        style={{...styles.logo, opacity: opacity}}
+        source={require('../assets/Images/logo.png')}
+      />
     </View>
   );
 }

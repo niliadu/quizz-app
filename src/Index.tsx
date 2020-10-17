@@ -5,11 +5,10 @@ import Login from './pages/Login';
 import SignUp from './pages/SignUp';
 import SplashScreen from './pages/SplashScreen';
 
-
 export default function Index() {
   return (
     <RecoilRoot>
-      <Navigation /*needs to be the first thing in the app*/>
+      <Navigation>
         <RootStack.Screen
           name="SPLASH_SCREEN"
           component={SplashScreen}
@@ -20,10 +19,19 @@ export default function Index() {
         <RootStack.Screen
           name="LOGIN"
           component={Login}
-          options={{title: 'Test'}}
+          options={{
+            headerShown: false,
+          }}
         />
         <RootStack.Screen
           name="SIGN_UP"
+          component={SignUp}
+          options={{
+            headerShown: false,
+          }}
+        />
+        <RootStack.Screen
+          name="HOME"
           component={SignUp}
           options={{
             headerShown: false,

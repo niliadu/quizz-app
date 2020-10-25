@@ -4,9 +4,6 @@ import {
   createStackNavigator,
   StackNavigationProp,
 } from '@react-navigation/stack';
-import SplashScreen from '../pages/SignUp';
-import Login from '../pages/Login';
-import SignUp from '../pages/SignUp';
 
 export type RoutesParams = {
   LOGIN: undefined;

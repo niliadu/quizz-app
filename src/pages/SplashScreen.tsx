@@ -6,9 +6,6 @@ import auth from '@react-native-firebase/auth';
 import {Animated} from 'react-native';
 
 export default function SplashScreen(props: RouteProp<'SPLASH_SCREEN'>) {
-  const [checkingUser, setCheckingUser] = React.useState(true);
-  const [authenticated, setAuthenticated] = React.useState(false);
-
   React.useEffect(() => {
     const subs = auth().onAuthStateChanged(user => {
       props.navigation.reset({
